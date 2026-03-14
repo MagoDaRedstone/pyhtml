@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Editor Python</title>
+  <link rel="stylesheet" href="src/style/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <div id="editor" class="editor" contenteditable="true" spellcheck="false" aria-label="editor de código" autocomplete="off">
+# Escreva código Python3 aqui
+print("Olá, mundo!")
+    </div>
+
+    <div class="controls">
+      <button id="run" class="btn">Executar (Ctrl/Cmd+Enter)</button>
+      <button id="docs" class="btn">Docs</button>
+      <button id="clear" class="btn ghost">Limpar Console</button>
+<button id="examples" class="btn">Exemplos</button>
+<div id="examples-panel" class="examples-panel hidden">
+  <button class="example-btn" data-example="sql">SQL Example</button>
+  <button class="example-btn" data-example="tkinter">Tkinter Example</button>
+</div>
+      <div id="status" class="status">carregando Python...</div>
+    </div>
+
+    <div class="console" id="console" aria-live="polite">output</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+  <script src="src/scripts/main.js"></script>
+  <script src="src/scripts/sql.js"></script>
+  <script src="src/scripts/tk.js"></script>
+</body>
+</html>

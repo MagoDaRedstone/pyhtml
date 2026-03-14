@@ -1,0 +1,47 @@
+import tkinter
+from tkinter import *
+
+root = Tk()
+root.title("Calculadora Simples")
+
+lbl1 = Label(text="Valor 1:")
+lbl1.pack()
+v1 = Entry()
+v1.pack()
+
+lbl2 = Label(text="Valor 2:")
+lbl2.pack()
+v2 = Entry()
+v2.pack()
+
+resultado = Label(text="Resultado: ")
+resultado.pack()
+
+def apagar():
+    limpar("resultado")
+
+def somar():
+    try:
+        apagar()
+        n1 = float(v1.get())
+        n2 = float(v2.get())
+        resultado.config(text=f"Resultado: {n1} + {n2} = {n1 + n2}")
+    except:
+        resultado.config(text="Erro: digite números válidos!")
+
+def subtrair():
+    try:
+        apagar()
+        n1 = float(v1.get())
+        n2 = float(v2.get())
+        resultado.config(text=f"Resultado: {n1} - {n2} = {n1 - n2}")
+    except:
+        resultado.config(text="Erro: digite números válidos!")
+
+btn_soma = Button(text="Somar", command=somar)
+btn_soma.pack()
+
+btn_sub = Button(text="Subtrair", command=subtrair)
+btn_sub.pack()
+
+root.mainloop()

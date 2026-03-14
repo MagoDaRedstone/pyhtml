@@ -1,0 +1,5 @@
+import sql
+create table alunos (id, nome, nota)
+insert into alunos values (1, "Maria", 9.5)
+insert into alunos values (2, "Pedro", 8.0)
+select * from alunos

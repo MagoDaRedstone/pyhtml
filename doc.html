@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação - Editor Python</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        h1, h2, h3 {
+            color: #10b981;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 8px;
+        }
+
+        code {
+            background: #1e293b;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #a5f3fc;
+        }
+
+        pre {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border-left: 4px solid #10b981;
+        }
+
+        .note {
+            background: #2d3a4f;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+            margin: 20px 0;
+        }
+
+        .warning {
+            background: #2d3a4f;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ef4444;
+        }
+
+        .system-card {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #334155;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #1e293b;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #10b981;
+            color: #042018;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .badge-blue {
+            background: #2563eb;
+            color: white;
+        }
+
+        .badge-green {
+            background: #10b981;
+            color: #042018;
+        }
+
+        .badge-purple {
+            background: #8b5cf6;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editor Python - Documentação Técnica</h1>
+
+    <p>
+        O editor opera em três modos distintos, determinados pela presença de imports específicos no código.
+        A detecção ocorre em <code>main.js</code> na seguinte ordem: primeiro verifica import de <code>sql</code>,
+        depois <code>tkinter</code>. Caso nenhum seja encontrado, executa no interpretador Skulpt.
+    </p>
+
+    <table>
+        <tr>
+            <th>Modo</th>
+            <th>Critério de ativação</th>
+            <th>Arquivo responsável</th>
+        </tr>
+        <tr>
+            <td>Python (Skulpt)</td>
+            <td>Ausência de imports sql/tkinter</td>
+            <td>main.js</td>
+        </tr>
+        <tr>
+            <td>Tkinter</td>
+            <td><code>import tkinter</code> ou <code>from tkinter import</code></td>
+            <td>tk.js</td>
+        </tr>
+        <tr>
+            <td>SQL</td>
+            <td><code>import sql</code> ou <code>from sql import</code></td>
+            <td>sql.js</td>
+        </tr>
+    </table>
+
+    <h2>1. Modo Python (Skulpt)</h2>
+
+    <p>
+        Executa código Python via Skulpt, interpretador implementado em JavaScript.
+        Suporta sintaxe Python 3 com as limitações inerentes ao Skulpt.
+    </p>
+
+    <h3>Funcionalidades</h3>
+    <ul>
+        <li><code>print()</code> - saída direcionada ao console da aplicação</li>
+        <li><code>input()</code> - abre campo de entrada no console, resolução via Promise</li>
+        <li>Indentação com Tab (insere 4 espaços)</li>
+        <li>Atalho Ctrl+Enter para execução</li>
+        <li>Bibliotecas padrão disponíveis no Skulpt (math, random, etc.)</li>
+    </ul>
+
+    <h3>Exemplo</h3>
+    <pre><code># Cálculo de média
+notas = []
+for i in range(3):
+    nota = float(input(f"Nota {i+1}: "))
+    notas.append(nota)
+
+media = sum(notas) / len(notas)
+print(f"Média: {media:.2f}")
+
+if media >= 7:
+    print("Aprovado")
+else:
+    print("Reprovado")</code></pre>
+
+    <h2>2. Modo Tkinter</h2>
+
+    <p>
+        Não executa Tkinter de fato. O código é analisado linha a linha por <code>tk.js</code>
+        e elementos da interface são gerados como HTML dentro de um iframe.
+    </p>
+
+    <h3>Componentes suportados</h3>
+    <ul>
+        <li><code>Tk()</code> + <code>.title()</code> - gera container com barra de título</li>
+        <li><code>Label()</code> - div com texto</li>
+        <li><code>Entry()</code> - input type="text"</li>
+        <li><code>Button()</code> - botão HTML com evento de clique</li>
+        <li><code>.pack()</code> - layout vertical (side não implementado)</li>
+        <li><code>.get()</code> - recupera valor de Entry</li>
+        <li><code>.config(text=...)</code> - atualiza texto de Label</li>
+    </ul>
+
+    <h3>Funções e escopo</h3>
+    <p>
+        Funções definidas com <code>def</code> são armazenadas e podem ser executadas via command de botões.
+        O parser possui um interpretador simplificado para blocos de função com suporte a:
+    </p>
+    <ul>
+        <li>Atribuição de variáveis (<code>n1 = float(v1.get())</code>)</li>
+        <li>Chamada entre funções</li>
+        <li><code>print()</code> - saída no mini-console integrado</li>
+        <li><code>try/except</code> - tratamento básico de erros</li>
+        <li><code>limpar()</code> - função customizada que limpa labels e entries</li>
+        <li>f-strings com expressões (<code>f"{n1} + {n2} = {n1 + n2}"</code>)</li>
+    </ul>
+
+    <h3>Exemplo</h3>
+    <pre><code>from tkinter import *
+
+root = Tk()
+root.title("Calculadora")
+
+v1 = Entry()
+v1.pack()
+v2 = Entry()
+v2.pack()
+resultado = Label(text="Resultado: ")
+resultado.pack()
+
+def somar():
+    try:
+        n1 = float(v1.get())
+        n2 = float(v2.get())
+        resultado.config(text=f"Soma: {n1 + n2}")
+    except:
+        resultado.config(text="Erro")
+
+Button(text="Somar", command=somar).pack()
+root.mainloop()</code></pre>
+
+    <div class="note">
+        <strong>Limitação:</strong> O parser não implementa orientação a objetos, herança ou métodos complexos.
+        É uma tradução superficial baseada em padrões de código.
+    </div>
+
+    <h2>3. Modo SQL</h2>
+
+    <p>
+        Implementa um banco de dados em memória via JavaScript. Comandos SQL são parseados
+        e executados contra estruturas de dados internas.
+    </p>
+
+    <h3>Comandos suportados</h3>
+    <ul>
+        <li><code>CREATE TABLE nome (coluna1, coluna2, ...)</code> - define colunas (tipos ignorados)</li>
+        <li><code>INSERT INTO nome VALUES (val1, val2, ...)</code> - valores podem ter ou não aspas</li>
+        <li><code>SELECT colunas FROM nome [WHERE coluna = valor]</code> - where apenas igualdade</li>
+        <li><code>UPDATE nome SET coluna = valor WHERE condição</code></li>
+        <li><code>DELETE FROM nome WHERE condição</code></li>
+        <li><code>DROP TABLE nome</code></li>
+    </ul>
+
+    <h3>Tratamento de erros</h3>
+    <p>
+        O parser inclui validação específica para vírgulas ausentes em CREATE TABLE,
+        gerando mensagem com ponteiro indicando a posição aproximada do erro.
+    </p>
+
+    <h3>Exemplo</h3>
+    <pre><code>import sql
+
+CREATE TABLE alunos (id, nome, nota)
+INSERT INTO alunos VALUES (1, "João", 8.5)
+INSERT INTO alunos VALUES (2, "Maria", 9.0)
+
+SELECT * FROM alunos
+SELECT nome FROM alunos WHERE nota = 9.0</code></pre>
+
+    <h2>Interface do Editor</h2>
+
+    <h3>Componentes</h3>
+    <table>
+        <tr>
+            <th>Elemento</th>
+            <th>Função</th>
+        </tr>
+        <tr>
+            <td>Editor</td>
+            <td>Área contenteditable com suporte a tab (4 espaços)</td>
+        </tr>
+        <tr>
+            <td>Executar</td>
+            <td>Executa o código (atalho Ctrl+Enter / Cmd+Enter)</td>
+        </tr>
+        <tr>
+            <td>Docs</td>
+            <td>Abre esta documentação</td>
+        </tr>
+        <tr>
+            <td>Limpar Console</td>
+            <td>Limpa a área de saída</td>
+        </tr>
+        <tr>
+            <td>Exemplos</td>
+            <td>Abre painel com exemplos pré-definidos (SQL e Tkinter)</td>
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td>Indica estado atual: "carregando", "executando", "pronto"</td>
+        </tr>
+        <tr>
+            <td>Console</td>
+            <td>Área de saída. No modo Tkinter, substituído por iframe com a GUI</td>
+        </tr>
+    </table>
+
+    <h3>Painel de Exemplos</h3>
+    <p>
+        O botão "Exemplos" exibe um painel flutuante com duas opções:
+    </p>
+    <ul>
+        <li><strong>SQL Example</strong> - carrega script de criação e consulta de tabela</li>
+        <li><strong>Tkinter Example</strong> - carrega exemplo da calculadora</li>
+    </ul>
+    <p>O painel é posicionado dinamicamente abaixo do botão e fechado ao clicar fora.</p>
+
+    <h2>Comportamento dos modos</h2>
+
+    <table>
+        <tr>
+            <th>Modo</th>
+            <th>Saída</th>
+            <th>Comportamento</th>
+        </tr>
+        <tr>
+            <td>Skulpt</td>
+            <td>Console principal</td>
+            <td>Execução real de Python</td>
+        </tr>
+        <tr>
+            <td>Tkinter</td>
+            <td>Iframe + mini-console</td>
+            <td>Tradução para elementos HTML</td>
+        </tr>
+        <tr>
+            <td>SQL</td>
+            <td>Tabelas formatadas em texto</td>
+            <td>Operações em banco fictício</td>
+        </tr>
+    </table>
+
+    <div class="warning">
+        <strong>Observação:</strong> Os modos são mutuamente exclusivos. A presença de import sql
+        tem precedência sobre tkinter devido à ordem de verificação no código.
+    </div>
+</body>
+</html>
